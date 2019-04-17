@@ -1,6 +1,5 @@
 
 all: flex gcc
-	@echo "Done."
 
 flex: trab1.l
 	flex trab1.l
@@ -10,3 +9,6 @@ gcc: trab1.c
 
 clean:
 	@rm -f trab1.c
+
+rm:
+	@rm -f trab1.c trab1
