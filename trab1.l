@@ -1,12 +1,11 @@
+	/* TRABALHO 1 DE COMPILADORES - MATHEUS HEMERLY RISSO */
 
 	/* Opções do Flex */
 
 	/* Nome do Arquivo de Saída: */
-%option outfile="trab1"
+%option outfile="trab1.c"
 	/* Não Usar Algumas Funções Desnecessárias */
 %option noyywrap
-%option nounput
-%option noinput
 /* Incrementar Automaticamente o Contador de quebra de linhas */
 %option yylineno
 
@@ -72,20 +71,23 @@ void trataErro ();
 [0-9]+	{ trataToken(NUM); }
 
 	/* ID */
-[a-zA-Z][a-zA-Z0-9]+	{ trataToken(ID); }
+[a-zA-Z][a-zA-Z0-9]*	{ trataToken(ID); }
 
 	/* Ignorar Comentários */
-"//".+	{ }
+"//".+|\n	{ }
 	/* Entra no condicional de comentário */
 "/*"	{ BEGIN(COMENTARIO); }
-	/* Ignora o que está dentro */
-<COMENTARIO>.	{ }
 	/* Sai do condicional ao final do com. */
 <COMENTARIO>"*/"	{ BEGIN(INITIAL); }
+	/* Ignora o que está dentro */
+<COMENTARIO>.|\n	{ }
 
 
 	/* STRING */
 \".*\"	{ trataToken(STRING); }
+
+	/* UNKNOWN */
+.	{ trataErro(); }
 
 
 %%
@@ -93,7 +95,7 @@ void trataErro ();
 	/* Funções de tratamento */
 void trataToken(tokenType t)
 {
-	printf("%d: %s -> %s\n", yylineno, yytext, TOKEN_TYPE_STRING(t));
+	printf("%d: %s -> %s\n", yylineno, yytext, TOKEN_TYPE_STRING[t]);
 }
 
 void trataErro()
